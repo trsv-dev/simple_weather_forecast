@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div>
+                <p>{{ form.city.label_tag }} {{ form.city }}</p>
+            </div>
+
+            <button type="submit">Получить прогноз</button>
+            <input type="reset" value="Очистить форму">
+{#            <button type="button" class="btn btn-outline-primary" onclick="window.location.href='{% url 'forecast:index' %}'">Очистить форму</button>#}
+
+        </form>
+
+        {% if form.errors %}
+
+            <div style="color: red;">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+
+        {% endif %}
+
+{% endblock %}

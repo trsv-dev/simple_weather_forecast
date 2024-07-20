@@ -1,0 +1,21 @@
+<h2>Прогноз на ближайшие 10 часов</h2>
+<table border="1" style="margin: auto; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>Время</th>
+            <th>Температура (°C)</th>
+            <th>Скорость ветра (км/ч)</th>
+            <th>Осадки (мм)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for time, temp, windspeed, precip in hourly_forecast %}
+        <tr>
+            <td>{{ time }}</td>
+            <td>{{ temp }}</td>
+            <td>{{ windspeed }}</td>
+            <td>{{ precip }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
