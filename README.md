@@ -5,7 +5,7 @@
 ## Описание
 **Тестовое задание на позицию Junior Python Developer.**
 
-**Демо:** http://forecast.trsv-dev.ru
+**Демо:** https://forecast.trsv-dev.ru/
 
 ## Задание:
 
