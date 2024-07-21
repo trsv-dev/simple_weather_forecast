@@ -1,0 +1,26 @@
+volumes:
+  static:
+
+services:
+  backend:
+    container_name: forecast_backend
+    build: ./backend/
+    command: |
+      bash -c 'gunicorn --bind 0:8000 weather_forecast.wsgi'
+    env_file:
+      - .env
+    volumes:
+      - static:/app/static/
+    restart: always
+
+  nginx:
+    container_name: forecast_nginx
+    build: ./gateway/
+    volumes:
+      - static:/app/static/
+    ports:
+      - ${NGINX_PORT}:80
+    depends_on:
+      backend:
+        condition: service_started
+    restart: always
