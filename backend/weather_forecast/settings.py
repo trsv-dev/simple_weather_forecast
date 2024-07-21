@@ -139,6 +139,11 @@ STATIC_ROOT = BASE_DIR / 'collected_static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Saved cities settings
+
+# How many last saved cities to display?
+SAVED_CITIES = 20
+
 # Forecast settings
 
 # From 0 to 16 days

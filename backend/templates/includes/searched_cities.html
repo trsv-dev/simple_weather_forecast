@@ -1,0 +1,9 @@
+<p><b>Вы недавно искали:</b></p>
+<div>
+    {% for city in searched_cities %}
+        <span class="city-name" onclick="fillCity('{{ city }}')">{{ city }}{% if not forloop.last %},{% endif %}</span>
+        {% if forloop.counter|divisibleby:5 and not forloop.last %}
+            <br>
+        {% endif %}
+    {% endfor %}
+</div>

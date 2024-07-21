@@ -4,11 +4,9 @@
 
     <form method="post">
         {% csrf_token %}
-
         <div>
-            <p>{{ form.city.label_tag }} {{ form.city }}</p>
+            <p>{{ form.city.label_tag }} <input type="text" name="city" id="city" autofocus /></p>
         </div>
-
         <button type="submit">Получить прогноз</button>
         <input type="reset" value="Очистить форму">
     </form>
@@ -27,15 +25,9 @@
     {% endif %}
 
     {% if searched_cities %}
-        <p>Вы недавно искали:</p>
-        <div>
-            {% for city in searched_cities %}
-                <span class="city-name" onclick="fillCity('{{ city }}')">{{ city }}{% if not forloop.last %},{% endif %}</span>
-                {% if forloop.counter|divisibleby:5 and not forloop.last %}
-                    <br>
-                {% endif %}
-            {% endfor %}
-        </div>
+
+        {% include 'includes/searched_cities.html' %}
+
     {% endif %}
 
     <style>
@@ -51,10 +43,10 @@
         }
     </style>
 
-    <script>
-        function fillCity(city) {
-            document.querySelector('[name="city"]').value = city;
-        }
-    </script>
+{% endblock %}
+
+{% block extra_js %}
+
+    {% include 'includes/city_autocomplete.html' %}
 
 {% endblock %}

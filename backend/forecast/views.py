@@ -1,3 +1,7 @@
+import os
+
+from django.conf import settings
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -24,7 +28,7 @@ def index(request):
 
     context = {
         'form': form,
-        'searched_cities': searched_cities,
+        'searched_cities': searched_cities[-settings.SAVED_CITIES:],
     }
     return render(request, 'forecast/index.html', context)
 
@@ -49,3 +53,22 @@ def detailed_forecast(request, city):
     }
 
     return render(request, 'forecast/detailed_forecast.html', context)
+
+
+def autocomplete(request):
+    """Автодополнение названия города при поиске."""
+
+    term = request.GET.get('term', '')
+    file_path = os.path.join(
+        os.path.dirname(__file__), '..', 'files', 'cities.txt'
+    )
+    file = os.path.abspath(file_path)
+
+    with open(file, 'r', encoding='utf-8') as f:
+        cities = [line.strip() for line in f]
+
+    filtered_cities = [
+        city for city in cities if city.lower().startswith(term.lower())
+    ]
+
+    return JsonResponse(filtered_cities, safe=False)

@@ -8,4 +8,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('detailed_forecast/<str:city>/',
          views.detailed_forecast, name='detailed_forecast'),
+    path('autocomplete/', views.autocomplete, name='autocomplete'),
 ]
