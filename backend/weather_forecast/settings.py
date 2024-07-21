@@ -7,6 +7,8 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http(s)://your_domain.com').split(', ')
+
 SECRET_KEY = os.getenv('SECRET_KEY', 'you_need_to_set_the_secret_key')
 
 DEBUG = os.getenv('DEBUG') == 'True'
