@@ -10,15 +10,21 @@ def index(request):
     """Главная страница."""
 
     form = CityForm(request.POST or None)
+    searched_cities = request.session.get('searched_cities', [])
 
     if form.is_valid():
         city = form.cleaned_data['city']
+
+        if city not in searched_cities:
+            searched_cities.append(city)
+        request.session['searched_cities'] = searched_cities
 
         return redirect(reverse('forecast:detailed_forecast',
                                 kwargs={'city': city}))
 
     context = {
-        'form': form
+        'form': form,
+        'searched_cities': searched_cities,
     }
     return render(request, 'forecast/index.html', context)
 

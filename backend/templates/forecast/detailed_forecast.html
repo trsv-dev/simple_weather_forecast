@@ -20,7 +20,7 @@
             <p>Нет данных о погоде на 10 дней для города "{{ city }}".</p>
         {% endif %}
 
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 20px; margin-bottom: 100px">
             <button type="button" class="btn btn-outline-primary" onclick="window.location.href='{% url 'forecast:index' %}'">Новый прогноз</button>
         </div>
 
