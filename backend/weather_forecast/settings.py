@@ -96,13 +96,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Saved cities settings
 ###############################################################################
 #### How many last saved cities to display?
-SAVED_CITIES = os.getenv('SAVED_CITIES', 20)
+SAVED_CITIES = int(os.getenv('SAVED_CITIES', 20))
 
 # Forecast settings
 ###############################################################################
 #### From 0 to 16 days
-DAYS_IN_FORECAST = os.getenv('DAYS_IN_FORECAST', 10)
+DAYS_IN_FORECAST = int(os.getenv('DAYS_IN_FORECAST', 10))
 #### From 1 to 24
-HOURS_IN_FORECAST = os.getenv('HOURS_IN_FORECAST', 10)
+HOURS_IN_FORECAST = int(os.getenv('HOURS_IN_FORECAST', 10))
 #### GMT
 GMT = os.getenv('GMT', '+03:00')
