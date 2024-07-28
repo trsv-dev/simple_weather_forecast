@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "simple-weather-forecast"
+version = "0.1.0"
+description = "Test task for Junior Python Developer"
+authors = ["trsv-dev <tarasov.itc@yandex.ru>"]
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^4.2.12"
+pytest = "8.3.1"
+python-dotenv = "1.0.0"
+requests = "2.32.3"
+pytest-django = "^4.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

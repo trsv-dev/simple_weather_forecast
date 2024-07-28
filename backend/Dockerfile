@@ -8,9 +8,11 @@ RUN pip install gunicorn==20.1.0
 RUN apt-get update && apt-get install -y locales
 RUN sed -i -e 's/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/' /etc/locale.gen && locale-gen
 
-COPY requirements.txt ./
+COPY pyproject.toml poetry.lock ./
 
-RUN pip install -r /app/requirements.txt --no-cache-dir
+RUN pip install poetry
+RUN poetry config virtualenvs.create false --local
+RUN poetry install --no-root --no-cache
 
 COPY . .
 

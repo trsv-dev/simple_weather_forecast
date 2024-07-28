@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from pathlib import Path
 
 import requests
 from django.test import TestCase, Client
@@ -79,7 +80,8 @@ class ViewsTestCase(TestCase):
         """
 
         self.guest_client.post(reverse('forecast:index'), {'city': self.city})
-        self.guest_client.post(reverse('forecast:index'), {'city': self.city_2})
+        self.guest_client.post(reverse('forecast:index'),
+                               {'city': self.city_2})
         self.guest_client.session.save()
 
         searched_cities = self.guest_client.session.get('searched_cities', [])
@@ -88,7 +90,7 @@ class ViewsTestCase(TestCase):
             self.city,
             searched_cities,
             'Город при поиске не добавляется в просмотренные города!'
-            )
+        )
 
         self.assertIn(
             self.city_2,
@@ -104,4 +106,16 @@ class ViewsTestCase(TestCase):
         self.assertTrue(
             'searched_cities' in self.guest_client.session,
             'Списка сохраняемых городов нет в сессии пользователя!'
+        )
+
+    def test_file_with_cities_is_exists(self):
+        """Тестируем существование файла с названиями городов."""
+
+        file_path = Path(
+            __file__).resolve().parent.parent / 'files' / 'cities.txt'
+
+        self.assertTrue(
+            file_path.is_file(),
+            msg='Файл с названиями городов не существует или название '
+                'отличается от "cities.txt"!'
         )
