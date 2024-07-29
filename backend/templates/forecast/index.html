@@ -1,34 +1,42 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" name="city" id="city" class="form-control" placeholder="Введите город" autofocus>
+                    </div>
+                    <br>
+                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                      <button type="submit" class="btn btn-primary">Получить прогноз</button>
+                      <button type="reset" class="btn btn-secondary">Очистить форму</button>
+                    </div>
 
-    <form method="post">
-        {% csrf_token %}
-        <div>
-            <p>{{ form.city.label_tag }} <input type="text" name="city" id="city" autofocus /></p>
+                </form>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger mt-3">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <br>
+                {% if searched_cities %}
+                    {% include 'includes/searched_cities.html' %}
+                {% endif %}
+            </div>
         </div>
-        <button type="submit">Получить прогноз</button>
-        <input type="reset" value="Очистить форму">
-    </form>
-
-    {% if form.errors %}
-        <div style="color: red;">
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-                <p>{{ error }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    {% if searched_cities %}
-
-        {% include 'includes/searched_cities.html' %}
-
-    {% endif %}
+    </div>
 
     <style>
         .city-name {
@@ -42,11 +50,8 @@
             border-radius: 3px;
         }
     </style>
-
 {% endblock %}
 
 {% block extra_js %}
-
     {% include 'includes/city_autocomplete.html' %}
-
 {% endblock %}

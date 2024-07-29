@@ -1,23 +1,36 @@
-<h2>Прогноз на 10 дней в городе {{ city }}</h2>
-<table border="1" style="margin: auto; border-collapse: collapse;">
-    <thead>
-        <tr>
-            <th>Дата</th>
-            <th>Макс. температура (°C)</th>
-            <th>Мин. температура (°C)</th>
-            <th>Осадки (мм)</th>
-            <th>Макс. скорость ветра (км/ч)</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for date, max_temp, min_temp, precip, windspeed in daily_forecast %}
-            <tr>
-                <td>{{ date }}</td>
-                <td>{{ max_temp }}</td>
-                <td>{{ min_temp }}</td>
-                <td>{{ precip }}</td>
-                <td>{{ windspeed }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% load static %}
+
+<style>
+    table th, table td {
+        padding: 0.25rem !important; /* Уменьшает отступы внутри ячеек */
+    }
+</style>
+
+
+<h4><b>Прогноз на 10 дней в городе {{ city }}</b></h4>
+<div class="container">
+    <div class="table-responsive-sm">
+        <table class="table table-sm table-striped table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Дата</th>
+                    <th>Макс. t° (°C)</th>
+                    <th>Мин. t° (°C)</th>
+                    <th>Осадки (мм)</th>
+                    <th>Ветер (макс., км/ч)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for date, max_temp, min_temp, precip, windspeed in daily_forecast %}
+                <tr>
+                    <td>{{ date }}</td>
+                    <td>{{ max_temp }}</td>
+                    <td>{{ min_temp }}</td>
+                    <td>{{ precip }}</td>
+                    <td>{{ windspeed }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

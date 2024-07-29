@@ -114,8 +114,13 @@ def get_daily_forecast(forecast_storage):
 
     daily = forecast_storage.get('daily', {})
 
+    # Для представления даты в виде MM.DD
+    months_and_days = [
+        date.replace('-', '.')[5:] for date in daily.get('time', [])
+    ]
+
     daily_forecast = zip(
-        daily.get('time', []),
+        months_and_days,
         daily.get('temperature_2m_max', []),
         daily.get('temperature_2m_min', []),
         daily.get('precipitation_sum', []),
