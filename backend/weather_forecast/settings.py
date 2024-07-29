@@ -93,6 +93,8 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR / 'collected_static'
 
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Saved cities settings
