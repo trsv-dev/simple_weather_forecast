@@ -7,7 +7,6 @@ from django.conf import settings
 from geopy.geocoders import Nominatim
 
 FORECAST_URL = 'https://api.open-meteo.com/v1/forecast'
-CITY_COORDS_URL = 'https://geocoding-api.open-meteo.com/v1/search'
 
 DIRECTIONS = {
     (0, 22.5): 'Север',

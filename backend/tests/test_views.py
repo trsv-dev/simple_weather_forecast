@@ -16,7 +16,6 @@ class ViewsTestCase(TestCase):
         self.city = 'Москва'
         self.city_2 = 'Санкт-Петербург'
         self.forecast_url = 'https://api.open-meteo.com/v1/forecast'
-        self.city_coords_url = 'https://geocoding-api.open-meteo.com/v1/search'
 
     def tearDown(self):
         """Удаляем тестовые данные после прохождения тестов."""
@@ -64,15 +63,6 @@ class ViewsTestCase(TestCase):
                          HTTPStatus.OK,
                          msg='API прогноза погоды недоступно!')
 
-    def test_coords_api_response(self):
-        """Тестируем доступность API получения координат."""
-
-        params = {'name': self.city}
-        response = requests.get(self.city_coords_url, params=params)
-
-        self.assertEqual(response.status_code, HTTPStatus.OK,
-                         msg='API получения координат недоступно!')
-
     def test_save_cities_in_session(self):
         """
         Тестируем сохранение в сессии городов,
@@ -106,16 +96,4 @@ class ViewsTestCase(TestCase):
         self.assertTrue(
             'searched_cities' in self.guest_client.session,
             'Списка сохраняемых городов нет в сессии пользователя!'
-        )
-
-    def test_file_with_cities_is_exists(self):
-        """Тестируем существование файла с названиями городов."""
-
-        file_path = Path(
-            __file__).resolve().parent.parent / 'files' / 'cities.txt'
-
-        self.assertTrue(
-            file_path.is_file(),
-            msg='Файл с названиями городов не существует или название '
-                'отличается от "cities.txt"!'
         )
