@@ -5,7 +5,7 @@
         {% if forecast %}
             {% include 'includes/current_weather.html' %}
         {% else %}
-            <br><p>🤷 Нет данных о погоде для города "{{ city }}".</p>
+            <br><p>🤷 Нет данных о погоде для "{{ city }}".</p>
         {% endif %}
 
         {% if hourly_forecast %}
