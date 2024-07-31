@@ -2,6 +2,21 @@
 {% load static %}
 
 {% block content %}
+
+    <style>
+        .city-name {
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .city-name:hover {
+            background-color: rgba(133, 136, 140, 0.36);
+            border-radius: 3px;
+        }
+    </style>
+
+
     <div class="container-fluid">
         <div class="d-flex justify-content-center">
             <div class="col-md-6 col-lg-4">
@@ -38,18 +53,6 @@
         </div>
     </div>
 
-    <style>
-        .city-name {
-            cursor: pointer;
-            display: inline-block;
-            margin-right: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .city-name:hover {
-            background-color: #dcd4d4;
-            border-radius: 3px;
-        }
-    </style>
 {% endblock %}
 
 {% block extra_js %}

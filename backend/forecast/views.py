@@ -1,5 +1,4 @@
-import os
-
+from dadata import Dadata
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -24,7 +23,7 @@ def index(request):
         request.session['searched_cities'] = searched_cities
 
         return redirect(reverse('forecast:detailed_forecast',
-                                kwargs={'city': city}))
+                                kwargs={'city': city.replace('/', '|')}))
 
     context = {
         'form': form,
@@ -46,7 +45,7 @@ def detailed_forecast(request, city):
     daily_forecast = get_daily_forecast(forecast_storage)
 
     context = {
-        'city': city.capitalize() if city else None,
+        'city': city if city else None,
         'forecast': forecast if forecast else None,
         'daily_forecast': daily_forecast if daily_forecast else None,
         'hourly_forecast': hourly_forecast if hourly_forecast else None,
@@ -59,16 +58,24 @@ def autocomplete(request):
     """Автодополнение названия города при поиске."""
 
     term = request.GET.get('term', '')
-    file_path = os.path.join(
-        os.path.dirname(__file__), '..', 'files', 'cities.txt'
+
+    DADATA_TOKEN = settings.DADATA_TOKEN
+    dadata = Dadata(DADATA_TOKEN)
+
+    result = dadata.suggest(
+        language='RU',
+        name="address",
+        query=term,
+        from_bound={"value": "city"},
+        to_bound={"value": "city"},
+        locations=[
+            {
+                "country_iso_code": "*"
+            }
+        ],
+        locations_boost=[
+            {"country_iso_code": "RU"}
+        ]
     )
-    file = os.path.abspath(file_path)
 
-    with open(file, 'r', encoding='utf-8') as f:
-        cities = [line.strip() for line in f]
-
-    filtered_cities = [
-        city for city in cities if city.lower().startswith(term.lower())
-    ]
-
-    return JsonResponse(filtered_cities, safe=False)
+    return JsonResponse(result, safe=False)

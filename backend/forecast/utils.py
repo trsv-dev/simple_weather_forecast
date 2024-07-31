@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from typing import List, Union
 
 import requests
-
 from django.conf import settings
+from geopy.geocoders import Nominatim
 
 FORECAST_URL = 'https://api.open-meteo.com/v1/forecast'
 CITY_COORDS_URL = 'https://geocoding-api.open-meteo.com/v1/search'
@@ -22,43 +22,27 @@ DIRECTIONS = {
 }
 
 
-def get_latitude(response):
-    """Получаем широту города."""
-
-    results = response.get('results', [])
-    if results:
-        return results[0].get('latitude')
-    return None
-
-
-def get_longitude(response):
-    """Получаем долготу города."""
-
-    results = response.get('results', [])
-    if results:
-        return results[0].get('longitude')
-    return None
-
-
 def get_coords(city):
     """Получаем координаты города для прогноза."""
 
-    params = {
-        'name': city,
-        'count': 10,
-        'format': 'json',
-        'language': 'ru'
-    }
+    geolocator = Nominatim(user_agent='city_coords_app')
+    location = geolocator.geocode(city, language='RU')
 
-    response = requests.get(CITY_COORDS_URL, params=params).json()
+    if location:
+        try:
+            latitude = location.latitude
+            longitude = location.longitude
+        except AttributeError:
+            latitude, longitude = 0, 0
 
-    latitude = get_latitude(response)
-    longitude = get_longitude(response)
+    else:
+        latitude, longitude = 0, 0
 
     return latitude, longitude
 
 
-def convert_windspeed(windspeed: Union[float, List[float]]) -> Union[float, List[float]]:
+def convert_windspeed(windspeed: Union[float, List[float]]) -> Union[
+    float, List[float]]:
     """
     Конвертируем скорость ветра из км/ч в м/с и округляем до
     одного знака после запятой.
@@ -96,7 +80,8 @@ def get_forecast(city):
         'latitude': latitude,
         'longitude': longitude,
         'current_weather': True,
-        'hourly': ['temperature_2m', 'windspeed_10m', 'precipitation', 'relative_humidity_2m'],
+        'hourly': ['temperature_2m', 'windspeed_10m', 'precipitation',
+                   'relative_humidity_2m'],
         'forecast_days': settings.DAYS_IN_FORECAST,
         'daily': ['temperature_2m_max', 'temperature_2m_min',
                   'precipitation_sum', 'windspeed_10m_max'],
@@ -158,9 +143,9 @@ def get_daily_forecast(forecast_storage):
 
     daily = forecast_storage.get('daily', {})
 
-    # Для представления даты в виде MM.DD
+    # Для представления даты в виде DD.MM
     months_and_days = [
-        date.replace('-', '.')[5:] for date in daily.get('time', [])
+        f'{date[8:10]}.{date[5:7]}' for date in daily.get('time', [])
     ]
 
     daily_forecast = zip(

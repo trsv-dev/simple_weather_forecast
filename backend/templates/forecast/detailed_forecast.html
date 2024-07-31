@@ -5,19 +5,15 @@
         {% if forecast %}
             {% include 'includes/current_weather.html' %}
         {% else %}
-            <p>Нет данных о погоде для города "{{ city }}".</p>
+            <br><p>🤷 Нет данных о погоде для города "{{ city }}".</p>
         {% endif %}
 
         {% if hourly_forecast %}
             {% include 'includes/hourly_forecast.html' %}
-        {% else %}
-            <p>Нет данных о почасовом прогнозе в городе "{{ city }}".</p>
         {% endif %}
 
         {% if daily_forecast %}
             {% include 'includes/daily_forecast.html' %}
-        {% else %}
-            <p>Нет данных о погоде на 10 дней для города "{{ city }}".</p>
         {% endif %}
 
         <div style="margin-top: 20px; margin-bottom: 100px">

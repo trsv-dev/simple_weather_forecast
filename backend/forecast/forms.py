@@ -8,7 +8,7 @@ class CityForm(forms.Form):
         max_length=200,
         validators=[
             RegexValidator(
-                regex=r'^[A-Za-zА-Яа-яёЁ\s-]+$',
+                regex=r'^[A-Za-zА-Яа-яёЁ\s.,/-]+$',
                 message='Введите допустимое название города '
                         '(только буквы, дефисы и пробелы)'
             )

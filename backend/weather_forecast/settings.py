@@ -110,3 +110,8 @@ DAYS_IN_FORECAST = int(os.getenv('DAYS_IN_FORECAST', 10))
 HOURS_IN_FORECAST = int(os.getenv('HOURS_IN_FORECAST', 10))
 #### GMT
 GMT = os.getenv('GMT', '+03:00')
+
+# Cities autocomplete settings
+###############################################################################
+#### Dadata token
+DADATA_TOKEN = os.getenv('DADATA_TOKEN', 'your_dadata_token_from_env')

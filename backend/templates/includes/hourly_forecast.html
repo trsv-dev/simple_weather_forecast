@@ -4,6 +4,10 @@
     table th, table td {
         padding: 0.25rem !important; /* Уменьшает отступы внутри ячеек */
     }
+
+        .weather-emoji {
+        font-size: 24px; /* Увеличивает размер шрифта для эмодзи */
+    }
 </style>
 
 
@@ -13,11 +17,11 @@
         <table class="table table-striped table-bordered table-hover">
             <thead class="table-primary">
                 <tr>
-                    <th>Время</th>
-                    <th>t° (°C)</th>
-                    <th>Ветер (м/с)</th>
-                    <th>Осадки (мм)</th>
-                    <th>Влажность (%)</th>
+                    <th><span class="weather-emoji">🕓</span></th>
+                    <th><span class="weather-emoji">🌡</span>(°C)</th>
+                    <th><span class="weather-emoji">🪁</span>(м/с)</th>
+                    <th><span class="weather-emoji">☔</span>(мм)</th>
+                    <th><span class="weather-emoji">💧</span>(%)</th>
                 </tr>
             </thead>
             <tbody>

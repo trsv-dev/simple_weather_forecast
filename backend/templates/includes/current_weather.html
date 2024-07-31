@@ -1,28 +1,36 @@
 {% load static %}
 
-<h4><b>Текущая погода в городе {{ city }}</b></h4>
-<p>Прогноз на: {{ forecast.current_weather.time }}</p>
+    <style>
+        .symmetrical-table {
+            table-layout: fixed; /* Устанавливает фиксированную раскладку таблицы */
+            width: 100%;
+        }
+    </style>
 
 <div class="container">
+
+    <div class="p-3 text-success-emphasis bg-success-subtle border border-success-subtle rounded-3">
+      <h4><b>{{ city }}</b></h4>
+    </div>
+
+    <br>
+
+    <h4><b>Прогноз на {{ forecast.current_weather.time }}</b></h4>
     <div class="table-responsive-sm">
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover symmetrical-table">
             <thead class="table-primary">
-                <tr>
-                    <th>Параметр</th>
-                    <th>Значение</th>
-                </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Температура сейчас</td>
+                    <td>🌡 Температура сейчас</td>
                     <td>{{ forecast.current_weather.temperature }} °C</td>
                 </tr>
                 <tr>
-                    <td>Скорость ветра</td>
+                    <td>🪁 Скорость ветра</td>
                     <td>{{ forecast.current_weather.windspeed }} м/с</td>
                 </tr>
                 <tr>
-                    <td>Направление ветра</td>
+                    <td>🧭 Направление ветра</td>
                     <td>{{ forecast.current_weather.winddirection }}</td>
                 </tr>
             </tbody>
