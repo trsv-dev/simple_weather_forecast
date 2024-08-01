@@ -1,4 +1,4 @@
-<p><b>Вы недавно искали:</b></p>
+{#<p><b>Вы недавно искали:</b></p>#}
 <div>
     {% for city in searched_cities %}
         <span class="city-name" onclick="fillCity('{{ city }}')">{{ city }}{% if not forloop.last %},{% endif %}</span>

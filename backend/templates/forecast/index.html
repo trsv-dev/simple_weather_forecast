@@ -45,13 +45,32 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-                <br>
-                {% if searched_cities %}
-                    {% include 'includes/searched_cities.html' %}
-                {% endif %}
+
             </div>
         </div>
     </div>
+                <br>
+                {% if searched_cities %}
+                    <div class="accordion" id="accordionExample">
+                        <div class="container">
+                            <div class="d-flex justify-content-center">
+                                <div class="col-md-6 col-lg-4">
+                                    <p class="d-inline-flex gap-1">
+                                      <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                        Вы недавно искали
+                                      </button>
+                                    </p>
+                                    <div class="collapse" id="collapseExample">
+                                      <div class="card card-body">
+                                          {% include 'includes/searched_cities.html' %}
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
 
 {% endblock %}
 

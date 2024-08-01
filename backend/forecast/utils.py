@@ -1,11 +1,15 @@
 import locale
+import logging
 from datetime import datetime, timedelta
+from functools import wraps
 from typing import List, Union
 
 import requests
 from django.conf import settings
+from geopy.adapters import AioHTTPAdapter
 from geopy.geocoders import Nominatim
 
+logger = logging.getLogger('django')
 FORECAST_URL = 'https://api.open-meteo.com/v1/forecast'
 
 DIRECTIONS = {
@@ -21,21 +25,50 @@ DIRECTIONS = {
 }
 
 
-def get_coords(city):
+def retries_async(max_attempts):
+    """
+    Параметрический декоратор для асинхронных функций. Служит для повторения
+    попыток соединения с сервером указанное в параметрах декоратора
+    количество раз.
+
+    :param max_attempts: Максимальное количество попыток.
+    """
+
+    def outer_wrapper(func):
+        @wraps(func)
+        async def inner_wrapper(*args, **kwargs):
+            attempts = 0
+            while attempts < max_attempts:
+                try:
+                    result = await func(*args, **kwargs)
+                    return result
+                except Exception:
+                    attempts += 1
+                    logger.warning(f'Функция {func.__name__}. Попытка '
+                                   f'{attempts} не удалась. Повторяем...')
+                    if attempts >= max_attempts:
+                        raise
+        return inner_wrapper
+    return outer_wrapper
+
+
+@retries_async(10)
+async def get_coords(city):
     """Получаем координаты города для прогноза."""
 
-    geolocator = Nominatim(user_agent='city_coords_app')
-    location = geolocator.geocode(city, language='RU')
+    async with Nominatim(user_agent='city_coords_app',
+                         adapter_factory=AioHTTPAdapter) as geolocator:
+        location = await geolocator.geocode(city, language='RU')
 
-    if location:
-        try:
-            latitude = location.latitude
-            longitude = location.longitude
-        except AttributeError:
+        if location:
+            try:
+                latitude = location.latitude
+                longitude = location.longitude
+            except AttributeError:
+                latitude, longitude = 0, 0
+
+        else:
             latitude, longitude = 0, 0
-
-    else:
-        latitude, longitude = 0, 0
 
     return latitude, longitude
 
@@ -68,10 +101,10 @@ def get_wind_direction(degrees):
     return 'Неизвестно'
 
 
-def get_forecast(city):
+async def get_forecast(city):
     """Получение прогноза для выбранного города."""
 
-    latitude, longitude = get_coords(city)
+    latitude, longitude = await get_coords(city)
     if not (latitude and longitude):
         return None
 

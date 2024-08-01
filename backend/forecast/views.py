@@ -1,4 +1,4 @@
-from dadata import Dadata
+from dadata import DadataAsync
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from forecast.forms import CityForm
 from forecast.utils import get_forecast, get_daily_forecast, \
-    get_hourly_forecast
+    get_hourly_forecast, retries_async
 
 
 def index(request):
@@ -32,12 +32,12 @@ def index(request):
     return render(request, 'forecast/index.html', context)
 
 
-def detailed_forecast(request, city):
+async def detailed_forecast(request, city):
     """Страница с детальным прогнозом погоды."""
 
     forecast_storage = {}
 
-    forecast = get_forecast(city)
+    forecast = await get_forecast(city)
     if forecast:
         forecast_storage = forecast
 
@@ -54,28 +54,30 @@ def detailed_forecast(request, city):
     return render(request, 'forecast/detailed_forecast.html', context)
 
 
-def autocomplete(request):
+@retries_async(10)
+async def autocomplete(request):
     """Автодополнение названия города при поиске."""
 
     term = request.GET.get('term', '')
 
     DADATA_TOKEN = settings.DADATA_TOKEN
-    dadata = Dadata(DADATA_TOKEN)
+    DADATA_SECRET = settings.DADATA_SECRET
 
-    result = dadata.suggest(
-        language='RU',
-        name="address",
-        query=term,
-        from_bound={"value": "city"},
-        to_bound={"value": "city"},
-        locations=[
-            {
-                "country_iso_code": "*"
-            }
-        ],
-        locations_boost=[
-            {"country_iso_code": "RU"}
-        ]
-    )
+    async with DadataAsync(DADATA_TOKEN, DADATA_SECRET) as dadata_async:
+        result = await dadata_async.suggest(
+            language='RU',
+            name="address",
+            query=term,
+            from_bound={"value": "city"},
+            to_bound={"value": "city"},
+            locations=[
+                {
+                    "country_iso_code": "*"
+                }
+            ],
+            locations_boost=[
+                {"country_iso_code": "RU"}
+            ]
+        )
 
     return JsonResponse(result, safe=False)

@@ -8,13 +8,17 @@
             <br><p>🤷 Нет данных о погоде для "{{ city }}".</p>
         {% endif %}
 
-        {% if hourly_forecast %}
-            {% include 'includes/hourly_forecast.html' %}
-        {% endif %}
+         <div class="container">
+            <div class="accordion" id="accordionFlushExample">
+                {% if hourly_forecast %}
+                    {% include 'includes/hourly_forecast.html' %}
+                {% endif %}
 
-        {% if daily_forecast %}
-            {% include 'includes/daily_forecast.html' %}
-        {% endif %}
+                {% if daily_forecast %}
+                    {% include 'includes/daily_forecast.html' %}
+                {% endif %}
+            </div>
+        </div>
 
         <div style="margin-top: 20px; margin-bottom: 100px">
             <button type="button" class="btn btn-outline-primary" onclick="window.location.href='{% url 'forecast:index' %}'">Новый прогноз</button>

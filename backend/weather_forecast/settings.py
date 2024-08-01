@@ -100,7 +100,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Saved cities settings
 ###############################################################################
 #### How many last saved cities to display?
-SAVED_CITIES = int(os.getenv('SAVED_CITIES', 20))
+SAVED_CITIES = int(os.getenv('SAVED_CITIES', 10))
 
 # Forecast settings
 ###############################################################################
@@ -115,3 +115,35 @@ GMT = os.getenv('GMT', '+03:00')
 ###############################################################################
 #### Dadata token
 DADATA_TOKEN = os.getenv('DADATA_TOKEN', 'your_dadata_token_from_env')
+#### Dadata secret
+DADATA_SECRET = os.getenv('DADATA_SECRET', 'your_dadata_secret_from_env')
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'server_log_formatter': {
+            'format': '%(asctime)s, %(levelname)s, %(message)s, %(name)s'
+        },
+    },
+    'handlers': {
+        'logfile': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/server.log',
+            'maxBytes': 1024*1024*5,  # (5 MB)
+            'backupCount': 3,
+            'formatter': 'server_log_formatter'
+        },
+        'console': {
+            'class': 'logging.StreamHandler'
+        }
+    },
+    'loggers': {
+        'django': {
+            'level': 'WARNING',
+            'handlers': ['console', 'logfile'],
+        },
+    },
+}
