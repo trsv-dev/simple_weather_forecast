@@ -1,7 +1,20 @@
 # Simple weather forecast
 
 ### Прогноз погоды
-![weather_forecast_screenshot.png](weather_forecast_screenshot.png)
+![screenshot_1.png](screenshot_1.png)
+
+<details>
+
+<summary>
+    Другие изображения
+</summary>
+
+![screenshot_2.png](screenshot_2.png)
+![screenshot_3.png](screenshot_3.png)
+![screenshot_4.png](screenshot_4.png)
+
+</details>
+
 ## Описание
 **Тестовое задание на позицию Junior Python Developer.**
 
