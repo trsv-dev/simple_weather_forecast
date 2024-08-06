@@ -52,7 +52,7 @@ def retries_async(max_attempts):
     return outer_wrapper
 
 
-@retries_async(10)
+@retries_async(settings.RETRIES_QUANTITY)
 async def get_coords(city):
     """Получаем координаты города для прогноза."""
 

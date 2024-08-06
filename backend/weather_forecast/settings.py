@@ -118,6 +118,11 @@ DADATA_TOKEN = os.getenv('DADATA_TOKEN', 'your_dadata_token_from_env')
 #### Dadata secret
 DADATA_SECRET = os.getenv('DADATA_SECRET', 'your_dadata_secret_from_env')
 
+# Retries quantity
+###############################################################################
+#### How many connection attempts before giving up
+RETRIES_QUANTITY = int(os.getenv('RETRIES_QUANTITY', 10))
+
 
 LOGGING = {
     'version': 1,

@@ -54,7 +54,7 @@ async def detailed_forecast(request, city):
     return render(request, 'forecast/detailed_forecast.html', context)
 
 
-@retries_async(10)
+@retries_async(settings.RETRIES_QUANTITY)
 async def autocomplete(request):
     """Автодополнение названия города при поиске."""
 
