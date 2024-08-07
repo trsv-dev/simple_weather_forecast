@@ -13,7 +13,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'you_need_to_set_the_secret_key')
 
 DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1, localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1, localhost').split(', ')
 
 
 INSTALLED_APPS = [
@@ -123,6 +123,9 @@ DADATA_SECRET = os.getenv('DADATA_SECRET', 'your_dadata_secret_from_env')
 #### How many connection attempts before giving up
 RETRIES_QUANTITY = int(os.getenv('RETRIES_QUANTITY', 10))
 
+# Yandex API key
+###############################################################################
+YANDEX_API_KEY = os.getenv('YANDEX_API_KEY', 'your_yandex_api_key_from_env')
 
 LOGGING = {
     'version': 1,

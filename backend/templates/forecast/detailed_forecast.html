@@ -2,6 +2,9 @@
 
 {% block content %}
 
+        {% if latitude and longitude and yandex_api_key%}
+                {% include 'includes/map.html' with latitude=latitude longitude=longitude yandex_api_key=yandex_api_key %}
+        {% endif %}
         {% if forecast %}
             {% include 'includes/current_weather.html' %}
         {% else %}

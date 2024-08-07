@@ -49,6 +49,9 @@ async def detailed_forecast(request, city):
         'forecast': forecast if forecast else None,
         'daily_forecast': daily_forecast if daily_forecast else None,
         'hourly_forecast': hourly_forecast if hourly_forecast else None,
+        'latitude': forecast_storage.get('latitude', None),
+        'longitude': forecast_storage.get('longitude', None),
+        'yandex_api_key': settings.YANDEX_API_KEY if settings.YANDEX_API_KEY else None,
     }
 
     return render(request, 'forecast/detailed_forecast.html', context)
