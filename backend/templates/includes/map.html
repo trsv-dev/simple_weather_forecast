@@ -30,56 +30,60 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // URL скрипта API Яндекс.Карт
             const yandexApiUrl = `https://api-maps.yandex.ru/2.1/?apikey={{ yandex_api_key }}&lang=ru_RU`;
 
-            // Функция для загрузки карты
-            function loadMap() {
+            let map = null;
+            let isLoading = false;
+
+            // Функция для создания карты после загрузки API Яндекс.Карт
+            async function createMap() {
+                ymaps.ready(function() {
+                    const latitude = {{ latitude|safe }};
+                    const longitude = {{ longitude|safe }};
+                    const temperature = {{ forecast.current_weather.temperature|safe }};
+
+                    map = new ymaps.Map('canvas', {
+                        center: [latitude, longitude],
+                        zoom: 11,
+                        controls: []
+                    }, {
+                        suppressMapOpenBlock: true,
+                        yandexMapDisablePoiInteractivity: false
+                    });
+
+                    var marker = new ymaps.Placemark([latitude, longitude], {
+                        hintContent: `Температура: ${temperature}°C, Широта: ${latitude}, Долгота: ${longitude}`,
+                        balloonContent: `<strong>Температура:</strong> ${temperature}°C<br><strong>Широта:</strong> ${latitude}<br><strong>Долгота:</strong> ${longitude}`
+                    });
+
+                    map.geoObjects.add(marker);
+                });
+            }
+
+            // Функция для асинхронной загрузки скрипта API Яндекс.Карт
+            async function loadMapScript() {
+                if (isLoading) return;
+                isLoading = true;
+
                 const script = document.createElement('script');
                 script.src = yandexApiUrl;
                 script.async = true;
                 script.onload = function() {
-                    ymaps.ready(initMap);
+                    createMap();
                 };
                 document.head.appendChild(script);
             }
 
-            // Функция инициализации карты
-            function initMap() {
-                // Объявляем переменные с фактическими значениями координат и температуры
-                const latitude = {{ latitude|safe }};
-                const longitude = {{ longitude|safe }};
-                const temperature = {{ forecast.current_weather.temperature|safe }};
-
-                // Создаем карту с параметрами
-                var map = new ymaps.Map('canvas', {
-                    center: [latitude, longitude],
-                    zoom: 11,
-                    controls: [] // Убираем все контролы
-                }, {
-                    suppressMapOpenBlock: true, // Убираем панель с предложением открыть карту в новом окне
-                    yandexMapDisablePoiInteractivity: false // Отключаем интерактивность POI (точек интереса)
-                });
-
-                // Создаем маркер с hintContent и balloonContent
-                var marker = new ymaps.Placemark([latitude, longitude], {
-                    hintContent: `Температура: ${temperature}°C, Широта: ${latitude}, Долгота: ${longitude}`,
-                    balloonContent: `<strong>Температура:</strong> ${temperature}°C<br><strong>Широта:</strong> ${latitude}<br><strong>Долгота:</strong> ${longitude}`
-                });
-
-                // Добавляем маркер на карту
-                map.geoObjects.add(marker);
-            }
-
-            // Используем Intersection Observer для отслеживания видимости элемента
+            // Используем IntersectionObserver для отслеживания видимости элемента
             const observer = new IntersectionObserver(entries => {
-                if (entries[0].isIntersecting === true) {
-                    loadMap(); // Загружаем карту, когда она становится видимой
-                    observer.unobserve(entries[0].target); // Прекращаем наблюдение
+                if (entries[0].isIntersecting) {
+                    if (!map) {
+                        loadMapScript();
+                    }
+                    observer.unobserve(entries[0].target);
                 }
             }, { threshold: [0] });
 
-            // Начинаем наблюдение за элементом карты
             observer.observe(document.getElementById('canvas'));
         });
     </script>
@@ -109,43 +113,7 @@
 {#            width: 100%;#}
 {#            height: 100%;#}
 {#        }#}
-{#        #canvas {#}
-{#            width: 100%;#}
-{#            height: 100%;#}
-{#            border: none;#}
-{#        }#}
 {#    </style>#}
-{#    <script src="https://api-maps.yandex.ru/2.1/?apikey={{  yandex_api_key }}&lang=ru_RU"></script>#}
-{#    <script>#}
-{#        // Объявляем переменные с фактическими значениями координат и температуры#}
-{#        const latitude = {{ latitude|safe }};#}
-{#        const longitude = {{ longitude|safe }};#}
-{#        const temperature = {{ forecast.current_weather.temperature|safe }};#}
-{##}
-{#        function initMap() {#}
-{#            // Создаем карту с параметрами#}
-{#            var map = new ymaps.Map('canvas', {#}
-{#                center: [latitude, longitude],#}
-{#                zoom: 11,#}
-{#                controls: [] // Убираем все контролы#}
-{#            }, {#}
-{#                suppressMapOpenBlock: true, // Убираем панель с предложением открыть карту в новом окне#}
-{#                yandexMapDisablePoiInteractivity: false // Отключаем интерактивность POI (точек интереса)#}
-{#            });#}
-{##}
-{#            // Создаем маркер с hintContent и balloonContent#}
-{#            var marker = new ymaps.Placemark([latitude, longitude], {#}
-{#                hintContent: `Температура: ${temperature}°C, Широта: ${latitude}, Долгота: ${longitude}`,#}
-{#                balloonContent: `<strong>Температура:</strong> ${temperature}°C<br><strong>Широта:</strong> ${latitude}<br><strong>Долгота:</strong> ${longitude}`#}
-{#            });#}
-{##}
-{#            // Добавляем маркер на карту#}
-{#            map.geoObjects.add(marker);#}
-{#        }#}
-{##}
-{#        // Инициализация карты после загрузки страницы#}
-{#        ymaps.ready(initMap);#}
-{#    </script>#}
 {#</head>#}
 {#<body>#}
 {#    <div class="container">#}
@@ -153,5 +121,61 @@
 {#            <div id="canvas" class="canvas"></div>#}
 {#        </div>#}
 {#    </div>#}
+{##}
+{#    <script>#}
+{#        document.addEventListener('DOMContentLoaded', function() {#}
+{#            // URL скрипта API Яндекс.Карт#}
+{#            const yandexApiUrl = `https://api-maps.yandex.ru/2.1/?apikey={{ yandex_api_key }}&lang=ru_RU`;#}
+{##}
+{#            // Функция для загрузки карты#}
+{#            function loadMap() {#}
+{#                const script = document.createElement('script');#}
+{#                script.src = yandexApiUrl;#}
+{#                script.async = true;#}
+{#                script.onload = function() {#}
+{#                    ymaps.ready(initMap);#}
+{#                };#}
+{#                document.head.appendChild(script);#}
+{#            }#}
+{##}
+{#            // Функция инициализации карты#}
+{#            function initMap() {#}
+{#                // Объявляем переменные с фактическими значениями координат и температуры#}
+{#                const latitude = {{ latitude|safe }};#}
+{#                const longitude = {{ longitude|safe }};#}
+{#                const temperature = {{ forecast.current_weather.temperature|safe }};#}
+{##}
+{#                // Создаем карту с параметрами#}
+{#                var map = new ymaps.Map('canvas', {#}
+{#                    center: [latitude, longitude],#}
+{#                    zoom: 11,#}
+{#                    controls: [] // Убираем все контролы#}
+{#                }, {#}
+{#                    suppressMapOpenBlock: true, // Убираем панель с предложением открыть карту в новом окне#}
+{#                    yandexMapDisablePoiInteractivity: false // Отключаем интерактивность POI (точек интереса)#}
+{#                });#}
+{##}
+{#                // Создаем маркер с hintContent и balloonContent#}
+{#                var marker = new ymaps.Placemark([latitude, longitude], {#}
+{#                    hintContent: `Температура: ${temperature}°C, Широта: ${latitude}, Долгота: ${longitude}`,#}
+{#                    balloonContent: `<strong>Температура:</strong> ${temperature}°C<br><strong>Широта:</strong> ${latitude}<br><strong>Долгота:</strong> ${longitude}`#}
+{#                });#}
+{##}
+{#                // Добавляем маркер на карту#}
+{#                map.geoObjects.add(marker);#}
+{#            }#}
+{##}
+{#            // Используем Intersection Observer для отслеживания видимости элемента#}
+{#            const observer = new IntersectionObserver(entries => {#}
+{#                if (entries[0].isIntersecting === true) {#}
+{#                    loadMap(); // Загружаем карту, когда она становится видимой#}
+{#                    observer.unobserve(entries[0].target); // Прекращаем наблюдение#}
+{#                }#}
+{#            }, { threshold: [0] });#}
+{##}
+{#            // Начинаем наблюдение за элементом карты#}
+{#            observer.observe(document.getElementById('canvas'));#}
+{#        });#}
+{#    </script>#}
 {#</body>#}
 {#</html>#}
