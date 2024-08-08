@@ -13,6 +13,10 @@
 
 ![screenshot_2.png](screenshot_2.png)
 
+### Текущая погода (ночной режим)
+
+![screenshot_5.png](screenshot_5.png)
+
 ### Прогноз на 10 часов
 ![screenshot_3.png](screenshot_3.png)
 
