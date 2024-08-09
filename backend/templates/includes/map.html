@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-bs-theme="">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -97,12 +97,13 @@
                 }
             }
 
-            // Функция для установки слоя карты
+
             function setMapLayer(map_type) {
                 if (window.map) {
                     const MAP = 'custom#' + map_type;
                     ymaps.layer.storage.add(MAP, function mapLayer() {
-                        return new ymaps.Layer('https://core-renderer-tiles.maps.yandex.net/tiles?l=map' + ((map_type === 'dark') ? ('&theme=dark') : '') + '&%c&%l');
+                        return new ymaps.Layer('https://core-renderer-tiles.maps.yandex.net/tiles?l=map' +
+                            ((map_type === 'dark') ? ('&theme=dark') : ('')) + '&%c&%l' + '&scale=2'); // Добавление параметра scale для увеличения качества
                     });
                     ymaps.mapType.storage.add(MAP, new ymaps.MapType(map_type, [MAP]));
                     window.map.setType(MAP);
